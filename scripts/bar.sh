@@ -45,9 +45,9 @@ get_volume() {
   printf "^c$red^ $percent"
 }
 
-battery() {
-  get_capacity="$(cat /sys/class/power_supply/BAT1/capacity)"
-  printf "^c$blue^   $get_capacity"
+get_battery() {
+  get_capacity="$(battery)"
+  printf "^c$blue^ %s" "$get_capacity"
 }
 
 get_brightness() {
@@ -107,5 +107,5 @@ while true; do
   [ $interval = 0 ] || [ $(($interval % 3600)) = 0 ] && updates=$(pkg_updates)
   interval=$((interval + 1))
 
-  sleep 1 && xsetroot -name "$updates $(get_volume) $(battery) $(get_brightness) $(cpu) $(mem) $(wlan) $(get_date) $(clock)"
+  sleep 1 && xsetroot -name "$updates $(get_volume) $(get_battery) $(get_brightness) $(cpu) $(mem) $(wlan) $(get_date) $(clock)"
 done

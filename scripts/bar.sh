@@ -74,13 +74,17 @@ wlan() {
               sed 's/unblocked//g' | uniq | wc -l)" -eq "1" ]; then
                   if [ "$(rfkill | grep 'blocked' | awk '{print $4 $5}' | \
                       sed 's/unblocked//g' | grep . | wc -l)" -gt "0" ]; then
-                      printf "^c$black^ ^b$blue^ 泌^d^%s" "^c$blue^off"
+                      printf "^c$black^ ^b$blue^ 泌 ^d^%s" "^c$blue^ off"
+                      noupstate="yes"
                   fi
           elif rfkill list wifi | grep 'Soft blocked' | awk '{print $3}' | \
               grep -q 'yes'; then
-                  printf "^c$black^ ^b$blue^ 󰤭 ^d^%s" "^c$blue^off"
+                  printf "^c$black^ ^b$blue^ 󰤭 ^d^%s" "^c$blue^ off"
+                  noupstate="yes"
           fi
-          printf "^c$black^ ^b$blue^ ﮤ ^d^ %s" "^c$blue^$upstate"
+          if ! echo "$noupstate" | grep -q "yes"; then
+              printf "^c$black^ ^b$blue^ ﮤ ^d^ %s" "^c$blue^$upstate"
+          fi
       else
           printf "^c$black^ ^b$blue^ ﮣ ^d^ %s" "^c$blue^$upstate"
       fi;;
@@ -88,7 +92,7 @@ wlan() {
           percent=$(awk '/^\s*w/ { print int($3 * 100 / 70) }' \
               /proc/net/wireless | sed 's/100/99/')
 
-          printf "^c$black^ ^b$blue^ 󰤨  ^d^ %s" "^c$blue^$percent"
+          printf "^c$black^ ^b$blue^ 󰤨 ^d^ %s" "^c$blue^$percent"
   esac
 }
 
